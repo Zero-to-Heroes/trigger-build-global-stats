@@ -10,6 +10,7 @@ import { TotalDamageDealtToEnemyHeroBuilder } from './stat-builders/total-damage
 import { TotalDurationBuilder } from './stat-builders/total-duration-builder';
 import { TotalEnemyMinionsDeathBuilder } from './stat-builders/total-enemy-minions-death';
 import { TotalManaSpentBuilder } from './stat-builders/total-mana-spent-builder';
+import { TotalNumberOfMatchesBuilder } from './stat-builders/total-number-of-matches-builder';
 import { StatBuilder } from './stat-builders/_stat-builder';
 
 export class StatsBuilder {
@@ -156,6 +157,7 @@ export class StatsBuilder {
 			new TotalDamageDealtToEnemyHeroBuilder(),
 			new TotalManaSpentBuilder(),
 			new TotalEnemyMinionsDeathBuilder(),
+			new TotalNumberOfMatchesBuilder(),
 			new TotalDurationBuilder(),
 		];
 	}
