@@ -7,6 +7,7 @@ import { GlobalStat } from './model/global-stat';
 import { GlobalStats } from './model/global-stats';
 import { ReviewMessage } from './review-message';
 import { TotalDamageDealtToEnemyHeroBuilder } from './stat-builders/total-damage-dealt-to-enemy-hero-builder';
+import { TotalEnemyMinionsDeathBuilder } from './stat-builders/total-enemy-minions-killed';
 import { TotalManaSpentBuilder } from './stat-builders/total-mana-spent-builder';
 import { StatBuilder } from './stat-builders/_stat-builder';
 
@@ -54,7 +55,7 @@ export class StatsBuilder {
 			await this.saveStats(userId, mergedStats);
 			return mergedStats;
 		} catch (e) {
-			console.warn('Could not build replay for', message.reviewId);
+			console.warn('Could not build replay for', message.reviewId, e);
 			return null;
 		}
 	}
@@ -150,7 +151,11 @@ export class StatsBuilder {
 	}
 
 	private static initializeBuilders(): readonly StatBuilder[] {
-		return [new TotalDamageDealtToEnemyHeroBuilder(), new TotalManaSpentBuilder()];
+		return [
+			new TotalDamageDealtToEnemyHeroBuilder(),
+			new TotalManaSpentBuilder(),
+			new TotalEnemyMinionsDeathBuilder(),
+		];
 	}
 }
 
