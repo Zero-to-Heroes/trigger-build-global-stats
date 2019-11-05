@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { CardType, GameTag } from '@firestone-hs/reference-data';
-import { parse } from 'elementtree';
+import { parseHsReplayString, Replay } from '@firestone-hs/hs-replay-xml-parser';
 import fetch, { RequestInfo } from 'node-fetch';
 // import { fetch } from 'node-fetch';
 import { Rds } from './db/rds';
 import { GlobalStat } from './model/global-stat';
 import { GlobalStats } from './model/global-stats';
-import { Replay } from './replay';
 import { ReviewMessage } from './review-message';
 import { TotalDamageDealtToEnemyHeroBuilder } from './stat-builders/total-damage-dealt-to-enemy-hero-builder';
+import { TotalManaSpentBuilder } from './stat-builders/total-mana-spent-builder';
 import { StatBuilder } from './stat-builders/_stat-builder';
 
 export class StatsBuilder {
@@ -37,7 +36,7 @@ export class StatsBuilder {
 		}
 		console.log('loaded replay string', replayString.length);
 		try {
-			const replay: Replay = this.buildReplay(replayString);
+			const replay: Replay = parseHsReplayString(replayString);
 			const stats: readonly GlobalStat[] = (await Promise.all(
 				StatsBuilder.statBuilders.map(builder => builder.extractStat(message, replay)),
 			))
@@ -58,33 +57,6 @@ export class StatsBuilder {
 			console.warn('Could not build replay for', message.reviewId);
 			return null;
 		}
-	}
-
-	private buildReplay(replayString: string): Replay {
-		// http://effbot.org/zone/element-xpath.htm
-		// http://effbot.org/zone/pythondoc-elementtree-ElementTree.htm
-		const elementTree = parse(replayString);
-		const mainPlayerId = elementTree
-			.findall(`.//ShowEntity`)
-			.filter(showEntity => showEntity.get('cardID'))
-			.filter(showEntity => {
-				const cardTypeTag = showEntity.find(`Tag[@tag='${GameTag.CARDTYPE}']`);
-				return !cardTypeTag || parseInt(cardTypeTag.get('value')) !== CardType.ENCHANTMENT;
-			})
-			.filter(showEntity => showEntity.find(`Tag[@tag='${GameTag.CONTROLLER}']`))
-			.map(showEntity => showEntity.find(`Tag[@tag='${GameTag.CONTROLLER}']`))
-			.map(tag => parseInt(tag.get('value')))
-			.find(controllerId => controllerId);
-		const gameFormat = parseInt(elementTree.find('Game').get('formatType'));
-		const gameMode = parseInt(elementTree.find('Game').get('gameType'));
-		const scenarioId = parseInt(elementTree.find('Game').get('scenarioID'));
-		return Object.assign(new Replay(), {
-			replay: elementTree,
-			mainPlayerId: mainPlayerId,
-			gameFormat: gameFormat,
-			gameType: gameMode,
-			scenarioId: scenarioId,
-		} as Replay);
 	}
 
 	private async loadExistingStats(userId: string): Promise<GlobalStats> {
@@ -178,7 +150,7 @@ export class StatsBuilder {
 	}
 
 	private static initializeBuilders(): readonly StatBuilder[] {
-		return [new TotalDamageDealtToEnemyHeroBuilder()];
+		return [new TotalDamageDealtToEnemyHeroBuilder(), new TotalManaSpentBuilder()];
 	}
 }
 

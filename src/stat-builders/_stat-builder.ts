@@ -1,5 +1,5 @@
+import { Replay } from '@firestone-hs/hs-replay-xml-parser';
 import { GlobalStat } from '../model/global-stat';
-import { Replay } from '../replay';
 import { ReviewMessage } from '../review-message';
 
 export interface StatBuilder {

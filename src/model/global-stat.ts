@@ -1,4 +1,4 @@
-import { GlobalStatContext } from './globa-stat-context.type';
+import { StatContext } from './context.type';
 import { GlobalStatKey } from './global-stat-key.type';
 
 export class GlobalStat {
@@ -6,5 +6,5 @@ export class GlobalStat {
 	statKey: GlobalStatKey;
 	value: number;
 	// More or less an equivalent of the gameMode + gamrFormat + scenario ID
-	statContext: GlobalStatContext;
+	statContext: StatContext;
 }

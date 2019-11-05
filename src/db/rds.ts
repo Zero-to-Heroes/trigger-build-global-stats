@@ -46,6 +46,8 @@ export class Rds {
 			port: secretResponse.port,
 			charset: 'utf8',
 			database: 'replay_summary',
+			timeout: 20000,
+			acquireTimeout: 20000,
 		});
 	}
 
