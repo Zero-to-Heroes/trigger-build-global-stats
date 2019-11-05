@@ -85,6 +85,7 @@ export class Rds {
 				});
 			} catch (e) {
 				console.error('Could not connect to DB', e);
+				reject();
 			}
 		});
 	}

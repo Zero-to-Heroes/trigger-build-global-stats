@@ -7,7 +7,8 @@ import { GlobalStat } from './model/global-stat';
 import { GlobalStats } from './model/global-stats';
 import { ReviewMessage } from './review-message';
 import { TotalDamageDealtToEnemyHeroBuilder } from './stat-builders/total-damage-dealt-to-enemy-hero-builder';
-import { TotalEnemyMinionsDeathBuilder } from './stat-builders/total-enemy-minions-killed';
+import { TotalDurationBuilder } from './stat-builders/total-duration-builder';
+import { TotalEnemyMinionsDeathBuilder } from './stat-builders/total-enemy-minions-death';
 import { TotalManaSpentBuilder } from './stat-builders/total-mana-spent-builder';
 import { StatBuilder } from './stat-builders/_stat-builder';
 
@@ -155,6 +156,7 @@ export class StatsBuilder {
 			new TotalDamageDealtToEnemyHeroBuilder(),
 			new TotalManaSpentBuilder(),
 			new TotalEnemyMinionsDeathBuilder(),
+			new TotalDurationBuilder(),
 		];
 	}
 }

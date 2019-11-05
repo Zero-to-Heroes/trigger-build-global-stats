@@ -1,1 +1,5 @@
-export type GlobalStatKey = 'total-damage-to-enemy-hero' | 'total-mana-spent' | 'total-enemy-minions-death';
+export type GlobalStatKey =
+	| 'total-damage-to-enemy-hero'
+	| 'total-mana-spent'
+	| 'total-enemy-minions-death'
+	| 'total-duration';
