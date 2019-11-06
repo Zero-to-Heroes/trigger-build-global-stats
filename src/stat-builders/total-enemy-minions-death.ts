@@ -9,7 +9,7 @@ export class TotalEnemyMinionsDeathBuilder implements StatBuilder {
 		const minionDeath = extractTotalMinionDeaths(replay);
 		console.log('minion deaths', minionDeath);
 		const contexts = buildContexts(replay);
-		console.log('contexts', contexts);
+		// console.log('contexts', contexts);
 		return contexts.map(
 			context =>
 				({

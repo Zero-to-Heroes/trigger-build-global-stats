@@ -7,7 +7,7 @@ import { StatBuilder } from './_stat-builder';
 export class TotalNumberOfMatchesBuilder implements StatBuilder {
 	public async extractStat(message: ReviewMessage, replay: Replay): Promise<readonly GlobalStat[]> {
 		const contexts = buildContexts(replay);
-		console.log('contexts', contexts);
+		// console.log('contexts', contexts);
 		return contexts.map(
 			context =>
 				({

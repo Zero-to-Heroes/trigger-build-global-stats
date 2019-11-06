@@ -55,7 +55,7 @@ export const buildContext = (replay: Replay): StatContext => {
 				case ScenarioId.TOMBS_OF_TERROR_CHAPTER_5_HEROIC:
 					return 'tombs-of-terror-heroic';
 				default:
-					console.log('returning default AI mode', replay.scenarioId);
+					console.log('returning default AI mode', replay.scenarioId, replay.gameFormat, replay.gameType);
 					return 'adventure';
 			}
 		case GameType.GT_RANKED:
