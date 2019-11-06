@@ -14,6 +14,8 @@ export const buildContext = (replay: Replay): StatContext => {
 		case GameType.GT_TB_1P_VS_AI:
 		case GameType.GT_TB_2P_COOP:
 			return 'tavern-brawl';
+		case GameType.GT_BATTLEGROUNDS:
+			return 'battlegrounds';
 		case GameType.GT_VS_AI:
 			switch (replay.scenarioId) {
 				case ScenarioId.PRACTICE:

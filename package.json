@@ -16,8 +16,8 @@
 	"license": "MIT",
 	"private": true,
 	"dependencies": {
-		"@firestone-hs/hs-replay-xml-parser": "0.0.5",
-		"@firestone-hs/reference-data": "0.0.6",
+		"@firestone-hs/hs-replay-xml-parser": "0.0.7",
+		"@firestone-hs/reference-data": "^0.1.0",
 		"@types/elementtree": "^0.1.0",
 		"aws-sdk": "^2.524.0",
 		"elementtree": "^0.1.7",
@@ -42,7 +42,6 @@
 		"eslint-config-prettier": "^6.2.0",
 		"eslint-loader": "^3.0.0",
 		"eslint-plugin-prettier": "^3.1.0",
-		"immutable": "^3.8.2",
 		"jest": "^24.9.0",
 		"prettier": "^1.18.2",
 		"ts-jest": "^24.0.2",
