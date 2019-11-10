@@ -6,10 +6,13 @@ import { Rds } from './db/rds';
 import { GlobalStat } from './model/global-stat';
 import { GlobalStats } from './model/global-stats';
 import { ReviewMessage } from './review-message';
+import { TotalTavernLockAllBuilder } from './stat-builders/battlegrounds/total-tavern-lock-all-builder';
+import { TotalTavernRerollBuilder } from './stat-builders/battlegrounds/total-tavern-reroll-builder';
 import { TotalTavernUpgradeBuilder } from './stat-builders/battlegrounds/total-tavern-upgrade-builder';
 import { BestBattlegroundsRankBuilder } from './stat-builders/best-rank-builder';
 import { TotalDamageDealtToEnemyHeroBuilder } from './stat-builders/total-damage-dealt-to-enemy-hero-builder';
 import { TotalDurationBuilder } from './stat-builders/total-duration-builder';
+import { TotalEnemyHeroesKilled } from './stat-builders/total-enemy-heroes-killed';
 import { TotalEnemyMinionsDeathBuilder } from './stat-builders/total-enemy-minions-death';
 import { TotalManaSpentBuilder } from './stat-builders/total-mana-spent-builder';
 import { TotalNumberOfMatchesBuilder } from './stat-builders/total-number-of-matches-builder';
@@ -168,6 +171,9 @@ export class StatsBuilder {
 			new TotalDurationBuilder(),
 			new BestBattlegroundsRankBuilder(),
 			new TotalTavernUpgradeBuilder(),
+			new TotalTavernLockAllBuilder(),
+			new TotalTavernRerollBuilder(),
+			new TotalEnemyHeroesKilled(),
 		];
 	}
 }
