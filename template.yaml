@@ -13,7 +13,7 @@ Resources:
             Timeout: 30
             Tracing: Active
             CodeUri: ./dist/build-global-stats
-            MemorySize: 128
+            MemorySize: 256
             Policies:
                 - AWSLambdaVPCAccessExecutionRole
                 - AmazonSESFullAccess

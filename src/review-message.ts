@@ -3,4 +3,5 @@ export interface ReviewMessage {
 	readonly replayKey: string;
 	readonly uploaderToken: string;
 	readonly gameMode: string;
+	readonly playerRank: string;
 }

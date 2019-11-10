@@ -3,4 +3,6 @@ export type GlobalStatKey =
 	| 'total-damage-to-enemy-hero'
 	| 'total-mana-spent'
 	| 'total-enemy-minions-death'
-	| 'total-duration';
+	| 'total-duration'
+	| 'total-tavern-upgrades'
+	| 'best-rank';

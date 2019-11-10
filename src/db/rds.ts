@@ -1,6 +1,6 @@
 import { SecretsManager } from 'aws-sdk';
 import { GetSecretValueRequest, GetSecretValueResponse } from 'aws-sdk/clients/secretsmanager';
-import { createPool, Pool } from 'mysql';
+import { createPool, Pool, PoolConnection } from 'mysql';
 
 const secretsManager = new SecretsManager({ region: 'us-west-2' });
 
@@ -39,7 +39,7 @@ export class Rds {
 		};
 		const secretResponse: SecretInfo = await this.getSecret(secretRequest);
 		return createPool({
-			connectionLimit: 5,
+			connectionLimit: 20,
 			host: secretResponse.host,
 			user: secretResponse.username,
 			password: secretResponse.password,
@@ -75,18 +75,52 @@ export class Rds {
 							resolve(results as T);
 						}
 					});
-
-					// connection.on('error', function(err) {
-					// 	console.error('Issue in connection', err);
-					// 	connection.release();
-					// 	reject();
-					// 	return;
-					// });
 				});
 			} catch (e) {
 				console.error('Could not connect to DB', e);
 				reject();
 			}
+		});
+	}
+
+	public async runQueries(queries: string[]): Promise<void> {
+		console.log('running queries', queries);
+		return new Promise<void>(async (resolve, reject) => {
+			try {
+				// console.log('getting connection', query);
+				this.pool.getConnection(async (err, connection) => {
+					// console.log('got connection', err, connection);
+					if (err) {
+						console.log('issue getting connection', err);
+						connection.release();
+						reject();
+						return;
+					}
+					for (const query of queries) {
+						await this.runQueryAsync(connection, query);
+					}
+					connection.release();
+					resolve();
+				});
+			} catch (e) {
+				console.error('Could not connect to DB', e);
+				reject();
+			}
+		});
+	}
+
+	private async runQueryAsync(connection: PoolConnection, query: string) {
+		return new Promise<void>((resolve, reject) => {
+			connection.query(query, (error, results, fields) => {
+				if (error) {
+					console.log('issue running query', error, query);
+					connection.release();
+					reject();
+				} else {
+					// console.log('qiery resiu', results);
+					resolve();
+				}
+			});
 		});
 	}
 }

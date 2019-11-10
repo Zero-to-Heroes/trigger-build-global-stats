@@ -6,6 +6,8 @@ import { Rds } from './db/rds';
 import { GlobalStat } from './model/global-stat';
 import { GlobalStats } from './model/global-stats';
 import { ReviewMessage } from './review-message';
+import { TotalTavernUpgradeBuilder } from './stat-builders/battlegrounds/total-tavern-upgrade-builder';
+import { BestBattlegroundsRankBuilder } from './stat-builders/best-rank-builder';
 import { TotalDamageDealtToEnemyHeroBuilder } from './stat-builders/total-damage-dealt-to-enemy-hero-builder';
 import { TotalDurationBuilder } from './stat-builders/total-duration-builder';
 import { TotalEnemyMinionsDeathBuilder } from './stat-builders/total-enemy-minions-death';
@@ -40,15 +42,17 @@ export class StatsBuilder {
 		console.log('loaded replay string', replayString.length);
 		try {
 			const replay: Replay = parseHsReplayString(replayString);
+			console.log('parsed replay');
 			const stats: readonly GlobalStat[] = (await Promise.all(
 				StatsBuilder.statBuilders.map(builder => builder.extractStat(message, replay)),
 			))
 				.reduce((a, b) => a.concat(b), [])
 				.filter(stat => stat.value > 0);
+			console.log('build stats from game');
 			const statsFromGame = Object.assign(new GlobalStats(), {
 				stats: stats,
 			} as GlobalStats);
-			console.log('built stats', statsFromGame);
+			console.log('assigned stats', statsFromGame);
 			const userId = uploaderToken.split('overwolf-')[1];
 			const statsFromDb: GlobalStats = await this.loadExistingStats(userId);
 			console.log('stats from db', statsFromDb);
@@ -81,16 +85,15 @@ export class StatsBuilder {
 		// Update existing stats
 		const existingStats = stats.stats.filter(stat => stat.id);
 		console.log('existing stats', existingStats);
-		if (existingStats.length > 0) {
-			await Promise.all(
-				existingStats.map(stat =>
-					rds.runQuery<void>(`
-						UPDATE global_stats
-						SET value = '${stat.value}'
-						WHERE id = '${stat.id}'`),
-				),
-			);
-		}
+		const queries =
+			existingStats.length > 0
+				? existingStats.map(
+						stat => `
+				UPDATE global_stats
+				SET value = '${stat.value}'
+				WHERE id = '${stat.id}'`,
+				  )
+				: [];
 		// Create new stats
 		const newStats = stats.stats.filter(stat => !stat.id);
 		console.log('newStats stats', newStats);
@@ -99,7 +102,7 @@ export class StatsBuilder {
 				stat => `('${userId}', '${stat.statKey}', '${stat.statContext}', '${stat.value}')`,
 			);
 			const valuesString = values.join(',');
-			await rds.runQuery<void>(`
+			queries.push(`
 				INSERT INTO global_stats (
 					userId, 
 					statKey,
@@ -108,6 +111,7 @@ export class StatsBuilder {
 				)
 				VALUES ${valuesString}`);
 		}
+		await rds.runQueries(queries);
 	}
 
 	public buildChangedStats(statsFromDb: GlobalStats, statsFromGame: GlobalStats): GlobalStats {
@@ -133,7 +137,10 @@ export class StatsBuilder {
 				const statFromDb: GlobalStat = statsFromDb.stats.find(
 					stat => stat.statKey === statKey && stat.statContext === context,
 				);
-				const mergedValue = (statFromDb ? statFromDb.value : 0) + statFromGame.value;
+				const valueFromDb = statFromDb ? statFromDb.value : 0;
+				const mergedValue = statKey.startsWith('best')
+					? Math.max(valueFromDb, statFromGame.value)
+					: valueFromDb + statFromGame.value;
 				return Object.assign(new GlobalStat(), {
 					id: (statFromDb || statFromGame).id,
 					statKey: statKey,
@@ -159,6 +166,8 @@ export class StatsBuilder {
 			new TotalEnemyMinionsDeathBuilder(),
 			new TotalNumberOfMatchesBuilder(),
 			new TotalDurationBuilder(),
+			new BestBattlegroundsRankBuilder(),
+			new TotalTavernUpgradeBuilder(),
 		];
 	}
 }
@@ -167,10 +176,11 @@ const http = async (request: RequestInfo): Promise<any> => {
 	return new Promise(resolve => {
 		fetch(request)
 			.then(response => {
-				// console.log('received response', response);
+				console.log('received response');
 				return response.text();
 			})
 			.then(body => {
+				console.log('sending back body', body && body.length);
 				resolve(body);
 			});
 	});
