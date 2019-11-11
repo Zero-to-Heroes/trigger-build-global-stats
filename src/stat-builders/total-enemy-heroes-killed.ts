@@ -1,7 +1,7 @@
 import { extractNumberOfKilledEnemyHeroes, Replay } from '@firestone-hs/hs-replay-xml-parser';
-import { buildContexts } from '../context-builder';
 import { GlobalStat } from '../model/global-stat';
 import { ReviewMessage } from '../review-message';
+import { buildContexts } from '../utils/context-builder';
 import { StatBuilder } from './_stat-builder';
 
 export class TotalEnemyHeroesKilled implements StatBuilder {

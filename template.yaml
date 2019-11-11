@@ -10,7 +10,7 @@ Resources:
         Properties:
             Handler: build-global-stats.default
             Runtime: nodejs8.10
-            Timeout: 30
+            Timeout: 120
             Tracing: Active
             CodeUri: ./dist/build-global-stats
             MemorySize: 256

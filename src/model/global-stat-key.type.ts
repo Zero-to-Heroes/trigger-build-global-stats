@@ -8,4 +8,5 @@ export type GlobalStatKey =
 	| 'total-tavern-lock-all'
 	| 'total-tavern-reroll'
 	| 'total-enemy-heroes-killed'
+	| 'total-minions-played-by-tribe-' // this can have prefixes for all tribes, in lowercase
 	| 'best-rank';

@@ -1,6 +1,6 @@
 import { Replay } from '@firestone-hs/hs-replay-xml-parser';
 import { GameFormat, GameType, ScenarioId } from '@firestone-hs/reference-data';
-import { StatContext } from './model/context.type';
+import { StatContext } from '../model/context.type';
 
 export const buildContext = (replay: Replay): StatContext => {
 	switch (replay.gameType) {
