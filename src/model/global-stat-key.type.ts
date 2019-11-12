@@ -8,5 +8,8 @@ export type GlobalStatKey =
 	| 'total-tavern-lock-all'
 	| 'total-tavern-reroll'
 	| 'total-enemy-heroes-killed'
-	| 'total-minions-played-by-tribe-' // this can have prefixes for all tribes, in lowercase
+	// this can have prefixes for all tribes, in lowercase, but I don't think it's possible
+	// to validate this in TS yet
+	// See https://github.com/microsoft/TypeScript/issues/6579
+	| 'total-minions-played-by-tribe-'
 	| 'best-rank';

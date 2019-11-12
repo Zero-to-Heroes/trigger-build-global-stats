@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { parseHsReplayString, Replay } from '@firestone-hs/hs-replay-xml-parser';
 import fetch, { RequestInfo } from 'node-fetch';
+import db from './db/rds';
 // import { fetch } from 'node-fetch';
-import { Rds } from './db/rds';
+// import { Rds } from './db/rds';
 import { GlobalStat } from './model/global-stat';
 import { GlobalStats } from './model/global-stats';
 import { ReviewMessage } from './review-message';
@@ -45,6 +46,7 @@ export class StatsBuilder {
 		}
 		console.log('loaded replay string', replayString.length);
 		try {
+			console.log('parsing replay');
 			const replay: Replay = parseHsReplayString(replayString);
 			console.log('parsed replay');
 			const stats: readonly GlobalStat[] = (
@@ -56,13 +58,17 @@ export class StatsBuilder {
 			const statsFromGame = Object.assign(new GlobalStats(), {
 				stats: stats,
 			} as GlobalStats);
-			console.log('assigned stats', statsFromGame);
+			console.log('built stats from game');
 			const userId = uploaderToken.split('overwolf-')[1];
-			const statsFromDb: GlobalStats = await this.loadExistingStats(userId);
-			console.log('stats from db', statsFromDb);
+			const mysql = await db.getConnection();
+			console.log('acquired mysql connection');
+			const statsFromDb: GlobalStats = await this.loadExistingStats(mysql, userId);
+			console.log('loaded stats from db');
 			const mergedStats: GlobalStats = this.buildChangedStats(statsFromDb, statsFromGame);
-			console.log('saving result', mergedStats);
-			await this.saveStats(userId, mergedStats);
+			console.log('saving result');
+			await this.saveStats(mysql, userId, mergedStats);
+			console.log('result saved');
+			await mysql.end();
 			return mergedStats;
 		} catch (e) {
 			console.warn('Could not build replay for', message.reviewId, e);
@@ -70,9 +76,9 @@ export class StatsBuilder {
 		}
 	}
 
-	private async loadExistingStats(userId: string): Promise<GlobalStats> {
-		const rds = await Rds.getInstance();
-		const results = await rds.runQuery<any[]>(`
+	private async loadExistingStats(mysql, userId: string): Promise<GlobalStats> {
+		// const rds = await Rds.getInstance();
+		const results = await mysql.query(`
 			SELECT * FROM global_stats
 			WHERE userId='${userId}'`);
 		// console.log('results from db', results);
@@ -84,11 +90,11 @@ export class StatsBuilder {
 		} as GlobalStats);
 	}
 
-	private async saveStats(userId: string, stats: GlobalStats): Promise<void> {
-		const rds = await Rds.getInstance();
+	private async saveStats(mysql, userId: string, stats: GlobalStats): Promise<void> {
+		// const rds = await getSqlConnection();
 		// Update existing stats
 		const existingStats = stats.stats.filter(stat => stat.id);
-		console.log('existing stats', existingStats);
+		// console.log('existing stats', existingStats);
 		const queries =
 			existingStats.length > 0
 				? existingStats.map(
@@ -100,7 +106,7 @@ export class StatsBuilder {
 				: [];
 		// Create new stats
 		const newStats = stats.stats.filter(stat => !stat.id);
-		console.log('newStats stats', newStats);
+		// console.log('newStats stats', newStats);
 		if (newStats.length > 0) {
 			const values = newStats.map(
 				stat => `('${userId}', '${stat.statKey}', '${stat.statContext}', '${stat.value}')`,
@@ -115,7 +121,8 @@ export class StatsBuilder {
 				)
 				VALUES ${valuesString}`);
 		}
-		await rds.runQueries(queries);
+
+		await Promise.all(queries.map(query => mysql.query(query)));
 	}
 
 	public buildChangedStats(statsFromDb: GlobalStats, statsFromGame: GlobalStats): GlobalStats {
@@ -127,7 +134,7 @@ export class StatsBuilder {
 		];
 		const newStats = uniqueKeys
 			.map(key => {
-				console.log('handling key', key);
+				// console.log('handling key', key);
 				const statKey = key.split('|')[0];
 				const context = key.split('|')[1];
 				const statFromGame: GlobalStat = statsFromGame.stats.find(
