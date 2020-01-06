@@ -7,7 +7,7 @@ import { StatBuilder } from './_stat-builder';
 export class TotalEnemyMinionsDeathBuilder implements StatBuilder {
 	public async extractStat(message: ReviewMessage, replay: Replay): Promise<readonly GlobalStat[]> {
 		const minionDeath = extractTotalMinionDeaths(replay);
-		console.log('minion deaths', minionDeath);
+		// console.log('minion deaths', minionDeath);
 		const contexts = buildContexts(replay);
 		// console.log('contexts', contexts);
 		return contexts.map(

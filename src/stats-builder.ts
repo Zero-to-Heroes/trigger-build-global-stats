@@ -28,46 +28,46 @@ export class StatsBuilder {
 	}
 
 	private async buildStat(message: ReviewMessage): Promise<GlobalStats> {
-		console.log('processing message', message);
+		// console.log('processing message', message);
 		if (message.gameMode == 'arena-draft') {
-			console.log('arena draft, not processing');
+			// console.log('arena draft, not processing');
 			return null;
 		}
 		const uploaderToken = message.uploaderToken;
 		if (!uploaderToken) {
-			console.log('empty uploaderToken, returning');
+			// console.log('empty uploaderToken, returning');
 			return null;
 		}
-		console.log('building stat for', message.reviewId, message.replayKey);
+		// console.log('building stat for', message.reviewId, message.replayKey);
 		const replayString = await this.loadReplayString(message.replayKey);
 		if (!replayString || replayString.length === 0) {
-			console.log('empty replay, returning');
+			// console.log('empty replay, returning');
 			return null;
 		}
-		console.log('loaded replay string', replayString.length);
+		// console.log('loaded replay string', replayString.length);
 		try {
-			console.log('parsing replay');
+			// console.log('parsing replay');
 			const replay: Replay = parseHsReplayString(replayString);
-			console.log('parsed replay');
+			// console.log('parsed replay');
 			const stats: readonly GlobalStat[] = (
 				await Promise.all(StatsBuilder.statBuilders.map(builder => builder.extractStat(message, replay)))
 			)
 				.reduce((a, b) => a.concat(b), [])
 				.filter(stat => stat.value > 0);
-			console.log('build stats from game');
+			// console.log('build stats from game');
 			const statsFromGame = Object.assign(new GlobalStats(), {
 				stats: stats,
 			} as GlobalStats);
-			console.log('built stats from game');
+			// console.log('built stats from game');
 			const userId = uploaderToken.split('overwolf-')[1];
 			const mysql = await db.getConnection();
-			console.log('acquired mysql connection');
+			// console.log('acquired mysql connection');
 			const statsFromDb: GlobalStats = await this.loadExistingStats(mysql, userId);
-			console.log('loaded stats from db');
+			// console.log('loaded stats from db');
 			const mergedStats: GlobalStats = this.buildChangedStats(statsFromDb, statsFromGame);
-			console.log('saving result');
+			// console.log('saving result');
 			await this.saveStats(mysql, userId, mergedStats);
-			console.log('result saved');
+			// console.log('result saved');
 			await mysql.end();
 			return mergedStats;
 		} catch (e) {
@@ -191,11 +191,11 @@ const http = async (request: RequestInfo): Promise<any> => {
 	return new Promise(resolve => {
 		fetch(request)
 			.then(response => {
-				console.log('received response, reading text body');
+				// console.log('received response, reading text body');
 				return response.text();
 			})
 			.then(body => {
-				console.log('sending back body', body && body.length);
+				// console.log('sending back body', body && body.length);
 				resolve(body);
 			});
 	});

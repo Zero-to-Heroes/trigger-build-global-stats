@@ -7,9 +7,9 @@ import { StatBuilder } from './_stat-builder';
 export class TotalDamageDealtToEnemyHeroBuilder implements StatBuilder {
 	public async extractStat(message: ReviewMessage, replay: Replay): Promise<readonly GlobalStat[]> {
 		const heroDamage = extractTotalDamageDealtToEnemyHero(replay);
-		console.log('heroDamage', heroDamage);
+		// console.log('heroDamage', heroDamage);
 		const damageToOpponentHero: number = heroDamage.opponent;
-		console.log('total damage to enemy hero', damageToOpponentHero);
+		// console.log('total damage to enemy hero', damageToOpponentHero);
 		const contexts = buildContexts(replay);
 		// console.log('contexts', contexts);
 		return contexts.map(

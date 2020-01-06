@@ -7,7 +7,7 @@ import { StatBuilder } from './_stat-builder';
 export class TotalManaSpentBuilder implements StatBuilder {
 	public async extractStat(message: ReviewMessage, replay: Replay): Promise<readonly GlobalStat[]> {
 		const totalManaSpent = extractTotalManaSpent(replay);
-		console.log('total mana spent', totalManaSpent);
+		// console.log('total mana spent', totalManaSpent);
 		const contexts = buildContexts(replay);
 		// console.log('contexts', contexts);
 		return contexts.map(
