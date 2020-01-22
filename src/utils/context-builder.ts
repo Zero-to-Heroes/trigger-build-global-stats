@@ -54,6 +54,19 @@ export const buildContext = (replay: Replay): StatContext => {
 				case ScenarioId.TOMBS_OF_TERROR_CHAPTER_4_HEROIC:
 				case ScenarioId.TOMBS_OF_TERROR_CHAPTER_5_HEROIC:
 					return 'tombs-of-terror-heroic';
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_1_FIGHT_1:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_1_FIGHT_2:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_1_FIGHT_3:
+				case ScenarioId.GALAKROND_EVIL_CHAP_1_FIGHT_1:
+				case ScenarioId.GALAKROND_EVIL_CHAP_1_FIGHT_2:
+				case ScenarioId.GALAKROND_EVIL_CHAP_1_FIGHT_3:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_1_FIGHT_1_HEROIC:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_1_FIGHT_2_HEROIC:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_1_FIGHT_3_HEROIC:
+				case ScenarioId.GALAKROND_EVIL_CHAP_1_FIGHT_1_HEROIC:
+				case ScenarioId.GALAKROND_EVIL_CHAP_1_FIGHT_2_HEROIC:
+				case ScenarioId.GALAKROND_EVIL_CHAP_1_FIGHT_3_HEROIC:
+					return 'galakrond';
 				default:
 					console.log('returning default AI mode', replay.scenarioId, replay.gameFormat, replay.gameType);
 					return 'adventure';

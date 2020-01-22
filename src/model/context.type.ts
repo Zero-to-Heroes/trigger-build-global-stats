@@ -18,4 +18,5 @@ export type StatContext =
 	| 'tombs-of-terror'
 	| 'tombs-of-terror-heroic'
 	| 'battlegrounds'
+	| 'galakrond'
 	| 'adventure';
