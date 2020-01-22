@@ -18,8 +18,24 @@ export const buildContext = (replay: Replay): StatContext => {
 			return 'battlegrounds';
 		case GameType.GT_VS_AI:
 			switch (replay.scenarioId) {
-				case ScenarioId.PRACTICE:
-				case ScenarioId.PRACTICE_2:
+				case ScenarioId.PRACTICE_MAGE:
+				case ScenarioId.PRACTICE_WARLOCK:
+				case ScenarioId.PRACTICE_HUNTER:
+				case ScenarioId.PRACTICE_ROGUE:
+				case ScenarioId.PRACTICE_PRIEST:
+				case ScenarioId.PRACTICE_WARRIOR:
+				case ScenarioId.PRACTICE_MAGE_EXPERT:
+				case ScenarioId.PRACTICE_DRUID:
+				case ScenarioId.PRACTICE_PALADIN:
+				case ScenarioId.PRACTICE_SHAMAN:
+				case ScenarioId.PRACTICE_WARRIOR_EXPERT:
+				case ScenarioId.PRACTICE_PRIEST_EXPERT:
+				case ScenarioId.PRACTICE_WARLOCK_EXPERT:
+				case ScenarioId.PRACTICE_DRUID_EXPERT:
+				case ScenarioId.PRACTICE_ROGUE_EXPERT:
+				case ScenarioId.PRACTICE_HUNTER_EXPERT:
+				case ScenarioId.PRACTICE_PALADIN_EXPERT:
+				case ScenarioId.PRACTICE_SHAMAN_EXPERT:
 					return 'practice';
 				case ScenarioId.DALARAN_HEIST_CHAPTER_1:
 				case ScenarioId.DALARAN_HEIST_CHAPTER_2:
