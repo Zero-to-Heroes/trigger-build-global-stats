@@ -16,8 +16,8 @@ Resources:
             Policies:
                 - AWSLambdaVPCAccessExecutionRole
                 - AmazonSESFullAccess
-                - SecretsManagerReadWrite
                 - AmazonSNSReadOnlyAccess
+                - SecretsManagerReadWrite
             Events:
                 ReviewPublishedSnsTopic:
                     Type: SNS
