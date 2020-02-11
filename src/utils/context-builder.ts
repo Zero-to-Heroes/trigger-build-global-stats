@@ -76,12 +76,24 @@ export const buildContext = (replay: Replay): StatContext => {
 				case ScenarioId.GALAKROND_EXPLORER_CHAP_2_FIGHT_1:
 				case ScenarioId.GALAKROND_EXPLORER_CHAP_2_FIGHT_2:
 				case ScenarioId.GALAKROND_EXPLORER_CHAP_2_FIGHT_3:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_3_FIGHT_1:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_3_FIGHT_2:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_3_FIGHT_3:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_4_FIGHT_1:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_4_FIGHT_2:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_4_FIGHT_3:
 				case ScenarioId.GALAKROND_EVIL_CHAP_1_FIGHT_1:
 				case ScenarioId.GALAKROND_EVIL_CHAP_1_FIGHT_2:
 				case ScenarioId.GALAKROND_EVIL_CHAP_1_FIGHT_3:
 				case ScenarioId.GALAKROND_EVIL_CHAP_2_FIGHT_1:
 				case ScenarioId.GALAKROND_EVIL_CHAP_2_FIGHT_2:
 				case ScenarioId.GALAKROND_EVIL_CHAP_2_FIGHT_3:
+				case ScenarioId.GALAKROND_EVIL_CHAP_3_FIGHT_1:
+				case ScenarioId.GALAKROND_EVIL_CHAP_3_FIGHT_2:
+				case ScenarioId.GALAKROND_EVIL_CHAP_3_FIGHT_3:
+				case ScenarioId.GALAKROND_EVIL_CHAP_4_FIGHT_1:
+				case ScenarioId.GALAKROND_EVIL_CHAP_4_FIGHT_2:
+				case ScenarioId.GALAKROND_EVIL_CHAP_4_FIGHT_3:
 				case ScenarioId.GALAKROND_EXPLORER_CHAP_1_FIGHT_1_HEROIC:
 				case ScenarioId.GALAKROND_EXPLORER_CHAP_1_FIGHT_2_HEROIC:
 				case ScenarioId.GALAKROND_EXPLORER_CHAP_1_FIGHT_3_HEROIC:
@@ -91,6 +103,9 @@ export const buildContext = (replay: Replay): StatContext => {
 				case ScenarioId.GALAKROND_EXPLORER_CHAP_3_FIGHT_1_HEROIC:
 				case ScenarioId.GALAKROND_EXPLORER_CHAP_3_FIGHT_2_HEROIC:
 				case ScenarioId.GALAKROND_EXPLORER_CHAP_3_FIGHT_3_HEROIC:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_4_FIGHT_1_HEROIC:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_4_FIGHT_2_HEROIC:
+				case ScenarioId.GALAKROND_EXPLORER_CHAP_4_FIGHT_3_HEROIC:
 				case ScenarioId.GALAKROND_EVIL_CHAP_1_FIGHT_1_HEROIC:
 				case ScenarioId.GALAKROND_EVIL_CHAP_1_FIGHT_2_HEROIC:
 				case ScenarioId.GALAKROND_EVIL_CHAP_1_FIGHT_3_HEROIC:
@@ -100,6 +115,9 @@ export const buildContext = (replay: Replay): StatContext => {
 				case ScenarioId.GALAKROND_EVIL_CHAP_3_FIGHT_1_HEROIC:
 				case ScenarioId.GALAKROND_EVIL_CHAP_3_FIGHT_2_HEROIC:
 				case ScenarioId.GALAKROND_EVIL_CHAP_3_FIGHT_3_HEROIC:
+				case ScenarioId.GALAKROND_EVIL_CHAP_4_FIGHT_1_HEROIC:
+				case ScenarioId.GALAKROND_EVIL_CHAP_4_FIGHT_2_HEROIC:
+				case ScenarioId.GALAKROND_EVIL_CHAP_4_FIGHT_3_HEROIC:
 					return 'galakrond';
 				default:
 					console.log('returning default AI mode', replay.scenarioId, replay.gameFormat, replay.gameType);
