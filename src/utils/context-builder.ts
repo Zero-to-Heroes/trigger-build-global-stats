@@ -1,4 +1,4 @@
-import { Replay } from '@firestone-hs/hs-replay-xml-parser';
+import { Replay } from '@firestone-hs/hs-replay-xml-parser/dist/public-api';
 import { GameFormat, GameType, ScenarioId } from '@firestone-hs/reference-data';
 import { StatContext } from '../model/context.type';
 
@@ -15,6 +15,7 @@ export const buildContext = (replay: Replay): StatContext => {
 		case GameType.GT_TB_2P_COOP:
 			return 'tavern-brawl';
 		case GameType.GT_BATTLEGROUNDS:
+		case GameType.GT_BATTLEGROUNDS_FRIENDLY:
 			return 'battlegrounds';
 		case GameType.GT_VS_AI:
 			switch (replay.scenarioId) {

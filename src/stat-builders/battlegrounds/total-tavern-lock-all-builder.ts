@@ -1,4 +1,4 @@
-import { Replay } from '@firestone-hs/hs-replay-xml-parser';
+import { Replay } from '@firestone-hs/hs-replay-xml-parser/dist/public-api';
 import { BlockType, GameTag } from '@firestone-hs/reference-data';
 import { GlobalStat } from '../../model/global-stat';
 import { ReviewMessage } from '../../review-message';

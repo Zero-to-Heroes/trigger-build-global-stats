@@ -1,4 +1,4 @@
-import { extractTotalManaSpent, Replay } from '@firestone-hs/hs-replay-xml-parser';
+import { extractTotalManaSpent, Replay } from '@firestone-hs/hs-replay-xml-parser/dist/public-api';
 import { GlobalStat } from '../model/global-stat';
 import { ReviewMessage } from '../review-message';
 import { buildContexts } from '../utils/context-builder';

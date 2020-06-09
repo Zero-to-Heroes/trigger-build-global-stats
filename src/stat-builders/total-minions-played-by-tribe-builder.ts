@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { extractAllMinionsPlayed, Replay } from '@firestone-hs/hs-replay-xml-parser';
+import { extractAllMinionsPlayed, Replay } from '@firestone-hs/hs-replay-xml-parser/dist/public-api';
 import { CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { Element } from 'elementtree';
 import { GlobalStat } from '../model/global-stat';
