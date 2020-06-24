@@ -169,7 +169,9 @@ export class StatsBuilder {
 	}
 
 	private async loadReplayString(replayKey: string): Promise<string> {
-		const data = await s3.readContentAsString('xml.firestoneapp.com', replayKey);
+		const data = replayKey.endsWith('.zip')
+			? await s3.readZippedContent('xml.firestoneapp.com', replayKey)
+			: await s3.readContentAsString('xml.firestoneapp.com', replayKey);
 		// const data = await http(`http://xml.firestoneapp.com/${replayKey}`);
 		return data;
 	}
