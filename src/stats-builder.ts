@@ -2,6 +2,7 @@
 import { parseHsReplayString, Replay } from '@firestone-hs/hs-replay-xml-parser/dist/public-api';
 import fetch, { RequestInfo } from 'node-fetch';
 import db from './db/rds';
+import { S3 } from './db/s3';
 // import { fetch } from 'node-fetch';
 // import { Rds } from './db/rds';
 import { GlobalStat } from './model/global-stat';
@@ -19,6 +20,8 @@ import { TotalManaSpentBuilder } from './stat-builders/total-mana-spent-builder'
 import { TotalMinionsPlayedByTribe } from './stat-builders/total-minions-played-by-tribe-builder';
 import { TotalNumberOfMatchesBuilder } from './stat-builders/total-number-of-matches-builder';
 import { StatBuilder } from './stat-builders/_stat-builder';
+
+const s3 = new S3();
 
 export class StatsBuilder {
 	private static readonly statBuilders: readonly StatBuilder[] = StatsBuilder.initializeBuilders();
@@ -166,7 +169,8 @@ export class StatsBuilder {
 	}
 
 	private async loadReplayString(replayKey: string): Promise<string> {
-		const data = await http(`http://xml.firestoneapp.com/${replayKey}`);
+		const data = await s3.readContentAsString('xml.firestoneapp.com', replayKey);
+		// const data = await http(`http://xml.firestoneapp.com/${replayKey}`);
 		return data;
 	}
 
