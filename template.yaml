@@ -18,6 +18,8 @@ Resources:
                 - AmazonSESFullAccess
                 - AmazonSNSReadOnlyAccess
                 - SecretsManagerReadWrite
+            Tags:
+                LambdaName: trigger-build-global-stats
             Events:
                 ReviewPublishedSnsTopic:
                     Type: SNS
