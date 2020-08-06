@@ -1,4 +1,4 @@
-import { GlobalStats } from './model/global-stats';
+import { GlobalStats } from '@firestone-hs/build-global-stats/dist/model/global-stats';
 import { ReviewMessage } from './review-message';
 import { StatsBuilder } from './stats-builder';
 
