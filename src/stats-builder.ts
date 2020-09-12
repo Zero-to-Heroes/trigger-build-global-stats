@@ -73,9 +73,9 @@ export class StatsBuilder {
 			existingStats.length > 0
 				? existingStats.map(
 						stat => `
-				UPDATE global_stats
-				SET value = '${stat.value}'
-				WHERE id = '${stat.id}'`,
+							UPDATE global_stats
+							SET value = '${stat.value}'
+							WHERE id = '${stat.id}'`,
 				  )
 				: [];
 		// Create new stats
