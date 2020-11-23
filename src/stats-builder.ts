@@ -2,7 +2,7 @@
 import { GlobalStat } from '@firestone-hs/build-global-stats/dist/model/global-stat';
 import { GlobalStats } from '@firestone-hs/build-global-stats/dist/model/global-stats';
 import { buildChangedStats, extractStatsForGame } from '@firestone-hs/build-global-stats/dist/stats-builder';
-import db from './db/rds';
+import { getConnection } from './db/rds';
 import { S3 } from './db/s3';
 // import { fetch } from 'node-fetch';
 // import { Rds } from './db/rds';
@@ -35,7 +35,7 @@ export class StatsBuilder {
 		// console.log('loaded replay string', replayString.length);
 		try {
 			const userId = uploaderToken.split('overwolf-')[1];
-			const mysql = await db.getConnection();
+			const mysql = await getConnection();
 			const statsFromDb: GlobalStats = await this.loadExistingStats(mysql, userId);
 			const statsFromGame = await extractStatsForGame(message, replayString);
 			const changedStats: GlobalStats = buildChangedStats(statsFromDb, statsFromGame);
