@@ -16,32 +16,34 @@ export class StatsBuilder {
 	}
 
 	private async buildStat(message: ReviewMessage): Promise<GlobalStats> {
-		// console.log('processing message', message);
+		console.log('processing message', message.gameMode, message);
 		if (message.gameMode == 'arena-draft') {
-			// console.log('arena draft, not processing');
+			console.log('arena draft, not processing');
 			return null;
 		}
 		const uploaderToken = message.uploaderToken;
 		if (!uploaderToken) {
-			// console.log('empty uploaderToken, returning');
+			console.log('empty uploaderToken, returning');
 			return null;
 		}
-		// console.log('building stat for', message.reviewId, message.replayKey);
+		console.log('building stat for', message.reviewId, message.replayKey);
 		const replayString = await this.loadReplayString(message.replayKey);
 		if (!replayString || replayString.length === 0) {
 			// console.log('empty replay, returning');
 			return null;
 		}
-		// console.log('loaded replay string', replayString.length);
+		console.log('loaded replay string', replayString.length);
 		try {
 			const userId = uploaderToken.split('overwolf-')[1];
 			const mysql = await getConnection();
 			const statsFromDb: GlobalStats = await this.loadExistingStats(mysql, userId);
+			console.log('loaded stats from db');
 			const statsFromGame = await extractStatsForGame(message, replayString);
+			console.log('extracted stats from game');
 			const changedStats: GlobalStats = buildChangedStats(statsFromDb, statsFromGame);
-			// console.log('saving result');
+			console.log('saving result');
 			await this.saveStats(mysql, userId, changedStats);
-			// console.log('result saved');
+			console.log('result saved');
 			await mysql.end();
 			return changedStats;
 		} catch (e) {
@@ -51,11 +53,10 @@ export class StatsBuilder {
 	}
 
 	private async loadExistingStats(mysql, userId: string): Promise<GlobalStats> {
-		// const rds = await Rds.getInstance();
 		const results = await mysql.query(`
 			SELECT * FROM global_stats
-			WHERE userId='${userId}'`);
-		// console.log('results from db', results);
+			WHERE userId = '${userId}'`);
+		console.log('results from db', results?.length);
 		const globalStats: readonly GlobalStat[] = results.map(result =>
 			Object.assign(new GlobalStat(), { ...result } as GlobalStat),
 		);
@@ -65,10 +66,9 @@ export class StatsBuilder {
 	}
 
 	private async saveStats(mysql, userId: string, stats: GlobalStats): Promise<void> {
-		// const rds = await getSqlConnection();
 		// Update existing stats
 		const existingStats = stats.stats.filter(stat => stat.id);
-		// console.log('existing stats', existingStats);
+		console.log('existing stats', existingStats?.length);
 		const queries =
 			existingStats.length > 0
 				? existingStats.map(
@@ -80,7 +80,7 @@ export class StatsBuilder {
 				: [];
 		// Create new stats
 		const newStats = stats.stats.filter(stat => !stat.id);
-		// console.log('newStats stats', newStats);
+		console.log('newStats stats', newStats?.length);
 		if (newStats.length > 0) {
 			const values = newStats.map(
 				stat => `('${userId}', '${stat.statKey}', '${stat.statContext}', '${stat.value}')`,
@@ -96,7 +96,12 @@ export class StatsBuilder {
 				VALUES ${valuesString}`);
 		}
 
-		await Promise.all(queries.map(query => mysql.query(query)));
+		await Promise.all(
+			queries.map(query => {
+				console.log('running query', query);
+				return mysql.query(query);
+			}),
+		);
 	}
 
 	private async loadReplayString(replayKey: string): Promise<string> {
