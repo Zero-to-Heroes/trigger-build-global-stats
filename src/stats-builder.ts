@@ -41,7 +41,7 @@ export class StatsBuilder {
 			const statsFromGame = await extractStatsForGame(message, replayString);
 			console.log('extracted stats from game');
 			const changedStats: GlobalStats = buildChangedStats(statsFromDb, statsFromGame);
-			console.log('saving result');
+			console.log('changed stats', changedStats?.stats?.length);
 			await this.saveStats(mysql, userId, changedStats);
 			console.log('result saved');
 			await mysql.end();
