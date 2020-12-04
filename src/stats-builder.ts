@@ -69,15 +69,15 @@ export class StatsBuilder {
 		// Update existing stats
 		const existingStats = stats.stats.filter(stat => stat.id);
 		console.log('existing stats', existingStats?.length);
-		const queries =
-			existingStats.length > 0
-				? existingStats.map(
-						stat => `
-							UPDATE global_stats
-							SET value = '${stat.value}'
-							WHERE id = '${stat.id}'`,
-				  )
-				: [];
+		const queries = [];
+		if (existingStats.length > 0) {
+			const values = existingStats.map(stat => `(${stat.id}, ${stat.value})`).join(',\n');
+			queries.push(`
+			  	INSERT INTO global_stats (id, value)
+			  	VALUES ${values}
+			  	ON DUPLICATE KEY UPDATE value = VALUES(value)
+		  	`);
+		}
 		// Create new stats
 		const newStats = stats.stats.filter(stat => !stat.id);
 		console.log('newStats stats', newStats?.length);
@@ -97,10 +97,12 @@ export class StatsBuilder {
 		}
 
 		await Promise.all(
-			queries.map(query => {
-				console.log('running query', query);
-				return mysql.query(query);
-			}),
+			queries
+				.filter(query => query)
+				.map(query => {
+					console.log('running query', query);
+					return mysql.query(query);
+				}),
 		);
 	}
 
