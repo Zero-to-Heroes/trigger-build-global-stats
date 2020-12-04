@@ -37,11 +37,11 @@ export class StatsBuilder {
 			const userId = uploaderToken.split('overwolf-')[1];
 			const mysql = await getConnection();
 			const statsFromDb: GlobalStats = await this.loadExistingStats(mysql, userId);
-			console.log('loaded stats from db');
+			console.log('loaded stats from db', statsFromDb?.stats?.length);
 			const statsFromGame = await extractStatsForGame(message, replayString);
-			console.log('extracted stats from game');
+			console.log('extracted stats from game', statsFromGame?.stats?.length, statsFromGame?.stats);
 			const changedStats: GlobalStats = buildChangedStats(statsFromDb, statsFromGame);
-			console.log('changed stats', changedStats?.stats?.length);
+			console.log('changed stats', changedStats?.stats?.length, changedStats?.stats);
 			await this.saveStats(mysql, userId, changedStats);
 			console.log('result saved');
 			await mysql.end();
