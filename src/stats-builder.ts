@@ -33,23 +33,18 @@ export class StatsBuilder {
 			return null;
 		}
 		console.log('loaded replay string', replayString.length);
-		try {
-			const userId = uploaderToken.split('overwolf-')[1];
-			const mysql = await getConnection();
-			const statsFromDb: GlobalStats = await this.loadExistingStats(mysql, userId);
-			console.log('loaded stats from db', statsFromDb?.stats?.length);
-			const statsFromGame = await extractStatsForGame(message, replayString);
-			console.log('extracted stats from game', statsFromGame?.stats?.length, statsFromGame?.stats);
-			const changedStats: GlobalStats = buildChangedStats(statsFromDb, statsFromGame);
-			console.log('changed stats', changedStats?.stats?.length, changedStats?.stats);
-			await this.saveStats(mysql, userId, changedStats);
-			console.log('result saved');
-			await mysql.end();
-			return changedStats;
-		} catch (e) {
-			console.warn('Could not build replay for', message.reviewId, e);
-			return null;
-		}
+		const userId = uploaderToken.split('overwolf-')[1];
+		const mysql = await getConnection();
+		const statsFromDb: GlobalStats = await this.loadExistingStats(mysql, userId);
+		console.log('loaded stats from db', statsFromDb?.stats?.length);
+		const statsFromGame = await extractStatsForGame(message, replayString);
+		console.log('extracted stats from game', statsFromGame?.stats?.length, statsFromGame?.stats);
+		const changedStats: GlobalStats = buildChangedStats(statsFromDb, statsFromGame);
+		console.log('changed stats', changedStats?.stats?.length, changedStats?.stats);
+		await this.saveStats(mysql, userId, changedStats);
+		console.log('result saved');
+		await mysql.end();
+		return changedStats;
 	}
 
 	private async loadExistingStats(mysql, userId: string): Promise<GlobalStats> {
