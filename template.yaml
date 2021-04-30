@@ -5,6 +5,37 @@ Transform: AWS::Serverless-2016-10-31
 Description: Lambda function that triggers on an SNS topic publication when a new review is created to enrich the user's global stats
 
 Resources:
+    SaveGlobalStatsQueue:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: save-global-stats-queue
+            VisibilityTimeout: 601
+    SqsQueuePolicySqsQueuePolicy:
+        Type: AWS::SQS::QueuePolicy
+        Properties:
+            PolicyDocument:
+                Version: '2012-10-17'
+                Id: SaveGlobalStatsQueuePolicy
+                Statement:
+                    - Sid: Allow-SNS-SendMessage
+                      Effect: Allow
+                      Principal:
+                          AWS: '*'
+                      Action:
+                          - sqs:SendMessage
+                      Resource: !GetAtt SaveGlobalStatsQueue.Arn
+                      Condition:
+                          ArnEquals:
+                              aws:SourceArn: arn:aws:sns:us-west-2:478062583808:review-published
+            Queues:
+                - !Ref SaveGlobalStatsQueue
+    SnsSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Protocol: SQS
+            Endpoint: !GetAtt SaveGlobalStatsQueue.Arn
+            TopicArn: arn:aws:sns:us-west-2:478062583808:review-published
+
     ProcessBuildGLobalStatsFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -26,4 +57,4 @@ Resources:
                 SQSEvent:
                     Type: SQS
                     Properties:
-                        Queue: arn:aws:sqs:us-west-2:478062583808:ranked-review-published-queue
+                        Queue: !GetAtt SaveGlobalStatsQueue.Arn
