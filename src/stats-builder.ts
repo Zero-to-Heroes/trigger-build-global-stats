@@ -16,33 +16,23 @@ export class StatsBuilder {
 	}
 
 	private async buildStat(message: ReviewMessage): Promise<GlobalStats> {
-		console.log('processing message', message.gameMode, message);
 		if (message.gameMode == 'arena-draft') {
-			console.log('arena draft, not processing');
 			return null;
 		}
 		const uploaderToken = message.uploaderToken;
 		if (!uploaderToken) {
-			console.log('empty uploaderToken, returning');
 			return null;
 		}
-		console.log('building stat for', message.reviewId, message.replayKey);
 		const replayString = await this.loadReplayString(message.replayKey);
 		if (!replayString || replayString.length === 0) {
-			// console.log('empty replay, returning');
 			return null;
 		}
-		console.log('loaded replay string', replayString.length);
 		const userId = uploaderToken.split('overwolf-')[1];
 		const mysql = await getConnection();
 		const statsFromDb: GlobalStats = await this.loadExistingStats(mysql, userId);
-		console.log('loaded stats from db', statsFromDb?.stats?.length);
 		const statsFromGame = await extractStatsForGame(message, replayString);
-		console.log('extracted stats from game', statsFromGame?.stats?.length, statsFromGame?.stats);
 		const changedStats: GlobalStats = buildChangedStats(statsFromDb, statsFromGame);
-		console.log('changed stats', changedStats?.stats?.length, changedStats?.stats);
 		await this.saveStats(mysql, userId, changedStats);
-		console.log('result saved');
 		await mysql.end();
 		return changedStats;
 	}
@@ -51,7 +41,6 @@ export class StatsBuilder {
 		const results = await mysql.query(`
 			SELECT * FROM global_stats
 			WHERE userId = '${userId}'`);
-		console.log('results from db', results?.length);
 		const globalStats: readonly GlobalStat[] = results.map(result =>
 			Object.assign(new GlobalStat(), { ...result } as GlobalStat),
 		);
@@ -63,7 +52,6 @@ export class StatsBuilder {
 	private async saveStats(mysql, userId: string, stats: GlobalStats): Promise<void> {
 		// Update existing stats
 		const existingStats = stats.stats.filter(stat => stat.id);
-		console.log('existing stats', existingStats?.length);
 		const queries = [];
 		if (existingStats.length > 0) {
 			const values = existingStats.map(stat => `(${stat.id}, ${stat.value})`).join(',\n');
@@ -75,7 +63,6 @@ export class StatsBuilder {
 		}
 		// Create new stats
 		const newStats = stats.stats.filter(stat => !stat.id);
-		console.log('newStats stats', newStats?.length);
 		if (newStats.length > 0) {
 			const values = newStats.map(
 				stat => `('${userId}', '${stat.statKey}', '${stat.statContext}', '${stat.value}')`,
@@ -95,7 +82,6 @@ export class StatsBuilder {
 			queries
 				.filter(query => query)
 				.map(query => {
-					console.log('running query', query);
 					return mysql.query(query);
 				}),
 		);
