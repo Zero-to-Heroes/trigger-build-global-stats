@@ -21,6 +21,7 @@ export class StatsBuilder {
 		}
 		const uploaderToken = message.uploaderToken;
 		if (!uploaderToken) {
+			console.debug('no uploader token');
 			return null;
 		}
 		const replayString = await this.loadReplayString(message.replayKey);
