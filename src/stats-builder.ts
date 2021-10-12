@@ -16,7 +16,7 @@ export class StatsBuilder {
 	}
 
 	private async buildStat(message: ReviewMessage): Promise<GlobalStats> {
-		if (message.gameMode == 'arena-draft') {
+		if (message.gameMode == 'arena-draft' || message.gameMode?.startsWith('mercenaries')) {
 			return null;
 		}
 		const uploaderToken = message.uploaderToken;
