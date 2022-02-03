@@ -29,12 +29,12 @@ Resources:
                               aws:SourceArn: arn:aws:sns:us-west-2:478062583808:review-published
             Queues:
                 - !Ref SaveGlobalStatsQueue
-    SnsSubscription:
-        Type: AWS::SNS::Subscription
-        Properties:
-            Protocol: SQS
-            Endpoint: !GetAtt SaveGlobalStatsQueue.Arn
-            TopicArn: arn:aws:sns:us-west-2:478062583808:review-published
+    # SnsSubscription:
+    #     Type: AWS::SNS::Subscription
+    #     Properties:
+    #         Protocol: SQS
+    #         Endpoint: !GetAtt SaveGlobalStatsQueue.Arn
+    #         TopicArn: arn:aws:sns:us-west-2:478062583808:review-published
 
     ProcessBuildGLobalStatsFunction:
         Type: AWS::Serverless::Function
@@ -42,9 +42,9 @@ Resources:
             Handler: process-build-global-stats.default
             Runtime: nodejs10.x
             CodeUri: ./dist/process-build-global-stats
-            Timeout: 40
+            Timeout: 90
             MemorySize: 384
-            ReservedConcurrentExecutions: 5
+            ReservedConcurrentExecutions: 8
             Policies:
                 - AWSLambdaVPCAccessExecutionRole
                 - SecretsManagerReadWrite
@@ -53,8 +53,8 @@ Resources:
                 # - arn:aws:iam::478062583808:policy/CloudWatchPolicyForLambda # See https://stackoverflow.com/questions/51166504/disable-cloudwatch-to-monitor-logs-for-lambda-function
             Tags:
                 LambdaName: process-build-global-stats
-            Events:
-                SQSEvent:
-                    Type: SQS
-                    Properties:
-                        Queue: !GetAtt SaveGlobalStatsQueue.Arn
+            # Events:
+            #     SQSEvent:
+            #         Type: SQS
+            #         Properties:
+            #             Queue: !GetAtt SaveGlobalStatsQueue.Arn
